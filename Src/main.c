@@ -7,43 +7,16 @@
 #define button1 GPIO_PIN_13
 
 //define bi-dir LED pins
-#define LED_R GPIO_PIN_15
-#define LED_G GPIO_PIN_14
+#define LED_R GPIO_PIN_8
+#define LED_G GPIO_PIN_9
+
+#define RED 1
+#define GREEN 0
 // USER DEFINES - END
 
 
-void ledSetupRG(void)
-{
-	GPIO_InitTypeDef led;
 
-	// setup pin PD15 as a digital output in push-pull
-	led.Pin = LED_R; // configure GPIO pin 15
-	led.Mode = GPIO_MODE_OUTPUT_PP; // output is push-pull
-	led.Speed = GPIO_SPEED_FREQ_MEDIUM; // set medium frequency clocking
-	HAL_GPIO_Init(GPIOA, &led); // initiliase GPIO PD15
 
-	// setup pin PD14 as a digital output in push-pull
-	led.Pin = LED_G; // configure GPIO pin 14
-	led.Mode = GPIO_MODE_OUTPUT_PP; // output is push-pull
-	led.Speed = GPIO_SPEED_FREQ_MEDIUM; // set medium frequency clocking
-	HAL_GPIO_Init(GPIOA, &led); // initiliase GPIO PD14
-}
-
-int ledColour(int a)
-{
-	if(a == 0)
-	{
-		HAL_GPIO_WritePin(GPIOA, LED_R, GPIO_PIN_SET); // set pin high
-
-		HAL_GPIO_WritePin(GPIOA, LED_G, GPIO_PIN_RESET); // set pin low
-	}
-	else if(a == 1)
-	{
-		HAL_GPIO_WritePin(GPIOA, LED_R, GPIO_PIN_RESET); // set pin low
-
-		HAL_GPIO_WritePin(GPIOA, LED_G, GPIO_PIN_SET); // set pin high
-	}
-}
 
 int main(void)
 {
@@ -54,7 +27,8 @@ int main(void)
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
 
-	gpioInit();
+	gpioInit(); // initialise button1 and LD2_PIN
+	ledSetupRG(); // initialise pins for bi-dir LED
 
 
 	while (1)
@@ -76,15 +50,19 @@ int main(void)
 		 * to the the pull-up on the board in hardware.
 		 */
 
+
 		if( !HAL_GPIO_ReadPin(GPIOC,button1) )
 		{
 			// if the button is pressed, button1 state is pulled low and its
 			// state changes.  We are reading to see if it the state has been set
-			HAL_GPIO_WritePin(GPIOA, LED2, GPIO_PIN_RESET); // turn LED2 OFF
+			HAL_GPIO_WritePin(GPIOA, LED2, GPIO_PIN_SET); // turn LED2 OFF
+			ledColour(RED);
+
 		}
 		else
 		{
-			HAL_GPIO_WritePin(GPIOA, LED2, GPIO_PIN_SET); // turn LED2 ON
+			HAL_GPIO_WritePin(GPIOA, LED2, GPIO_PIN_RESET); // turn LED2 ON
+			ledColour(GREEN);
 		}
 	}
 
@@ -117,6 +95,40 @@ void gpioInit(void)
 	gpio.Pull = GPIO_PULLDOWN; // pulldown activated on PC13
 	HAL_GPIO_Init(GPIOC, &gpio); // initialise GPIO PC13 (button1)
 
+}
+
+void ledSetupRG(void)
+{
+	GPIO_InitTypeDef led;
+
+	// setup pin PB8 as a digital output in push-pull
+	led.Pin = LED_R; // configure GPIO pin 8
+	led.Mode = GPIO_MODE_OUTPUT_PP; // output is push-pull
+	led.Speed = GPIO_SPEED_FREQ_MEDIUM; // set medium frequency clocking
+	HAL_GPIO_Init(GPIOB, &led); // initiliase GPIO PD8
+
+	// setup pin PB9 as a digital output in push-pull
+	led.Pin = LED_G; // configure GPIO pin 9
+	led.Mode = GPIO_MODE_OUTPUT_PP; // output is push-pull
+	led.Speed = GPIO_SPEED_FREQ_MEDIUM; // set medium frequency clocking
+	HAL_GPIO_Init(GPIOB, &led); // initiliase GPIO PB9
+}
+
+
+int ledColour(int a)
+{
+	if(a == 0)
+	{
+		HAL_GPIO_WritePin(GPIOB, LED_R, GPIO_PIN_SET); // set pin high
+
+		HAL_GPIO_WritePin(GPIOB, LED_G, GPIO_PIN_RESET); // set pin low
+	}
+	else if(a == 1)
+	{
+		HAL_GPIO_WritePin(GPIOB, LED_R, GPIO_PIN_RESET); // set pin low
+
+		HAL_GPIO_WritePin(GPIOB, LED_G, GPIO_PIN_SET); // set pin high
+	}
 }
 
 // USER DEFINED FUNCTION - END
