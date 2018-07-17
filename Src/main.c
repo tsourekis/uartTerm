@@ -5,8 +5,45 @@
 // USER DEFINES - START
 #define LED2 GPIO_PIN_5
 #define button1 GPIO_PIN_13
+
+//define bi-dir LED pins
+#define LED_R GPIO_PIN_15
+#define LED_G GPIO_PIN_14
 // USER DEFINES - END
 
+
+void ledSetupRG(void)
+{
+	GPIO_InitTypeDef led;
+
+	// setup pin PD15 as a digital output in push-pull
+	led.Pin = LED_R; // configure GPIO pin 15
+	led.Mode = GPIO_MODE_OUTPUT_PP; // output is push-pull
+	led.Speed = GPIO_SPEED_FREQ_MEDIUM; // set medium frequency clocking
+	HAL_GPIO_Init(GPIOA, &led); // initiliase GPIO PD15
+
+	// setup pin PD14 as a digital output in push-pull
+	led.Pin = LED_G; // configure GPIO pin 14
+	led.Mode = GPIO_MODE_OUTPUT_PP; // output is push-pull
+	led.Speed = GPIO_SPEED_FREQ_MEDIUM; // set medium frequency clocking
+	HAL_GPIO_Init(GPIOA, &led); // initiliase GPIO PD14
+}
+
+int ledColour(int a)
+{
+	if(a == 0)
+	{
+		HAL_GPIO_WritePin(GPIOA, LED_R, GPIO_PIN_SET); // set pin high
+
+		HAL_GPIO_WritePin(GPIOA, LED_G, GPIO_PIN_RESET); // set pin low
+	}
+	else if(a == 1)
+	{
+		HAL_GPIO_WritePin(GPIOA, LED_R, GPIO_PIN_RESET); // set pin low
+
+		HAL_GPIO_WritePin(GPIOA, LED_G, GPIO_PIN_SET); // set pin high
+	}
+}
 
 int main(void)
 {
