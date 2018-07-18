@@ -3,10 +3,51 @@
 #include "stm32f3xx_hal.h"
 
 // USER DEFINES - START
-
+#define TX2 GPIO_PIN_2 //PA2
+#define RX2 GPIO_PIN_3 //PA3
 // USER DEFINES - END
 
 
+
+void uartInit(void)
+{
+	// USART1_TX: PA9 USART1_RX: PA10 //
+
+	__USART2_CLK_ENABLE(); // enable USART2 clock
+	//__HAL_RCC_GPIOA_CLK_ENABLE(); // don't need to do this for this program since it is done in MX_PGIO_init();
+
+	// declare local typedef for GPIO
+	GPIO_InitTypeDef uartGPIO; // declare typedef for setting up GPIOs for UART
+
+	// USART2 Pin Assignment //
+
+	//TX2
+	uartGPIO.Pin = TX2; // USART2_TX: PA2
+	uartGPIO.Mode = GPIO_MODE_AF_PP; // set pin to Alternate Function in Push-Pull Mode
+	uartGPIO.Alternate = GPIO_AF7_USART2; // assign alternate function to port
+	uartGPIO.Speed = GPIO_SPEED_FREQ_HIGH; // high frequency clocking
+	HAL_GPIO_Init(GPIOA, &uartGPIO); // initialise PA2
+	//RX2
+	uartGPIO.Pin = RX2; // USART2_TX: PA3
+	uartGPIO.Mode = GPIO_MODE_AF_PP; // set pin to Alternate Function in Push-Pull Mode
+	uartGPIO.Alternate = GPIO_AF7_USART2; // assign alternate function to port
+	uartGPIO.Speed = GPIO_SPEED_FREQ_HIGH; // high frequency clocking
+	HAL_GPIO_Init(GPIOA, &uartGPIO); // initialise PA3
+
+	// Set the USART settings
+
+	// declare local typedef for USART
+	UART_InitTypeDef uartSet;
+
+
+	//uartSet.BaudRate = 115200; // set the baud rate
+	//uartSet.HwFlowCtl = UART_HWCONTROL_NONE; // no hardware control
+	//uartSet.Mode = UART_MODE_RX | UART_MODE_TX; // TX or RX mode
+	//uartSet.Parity = UART_PARITY_NONE; // no parity
+	//uartSet.StopBits = UART_STOPBITS_1; // 1 stop bit
+	//uartSet.WordLength = UART_WordLength_8b;
+
+}
 
 
 
@@ -18,6 +59,8 @@ int main(void)
 	SystemClock_Config();
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
+	/* Initiliaze UART settings */
+	uartInit();
 
 	while (1)
 	{
