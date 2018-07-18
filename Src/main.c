@@ -2,18 +2,23 @@
 #include "main.h"
 #include "stm32f3xx_hal.h"
 
+// SEE DOCUMENT "UM1786" FOR HAL DRIVERS
+
 // USER DEFINES - START
 #define TX2 GPIO_PIN_2 //PA2
 #define RX2 GPIO_PIN_3 //PA3
 // USER DEFINES - END
 
+// declare global handle for USART
+UART_HandleTypeDef uart2Set;
 
 
 void uartInit(void)
 {
 	// USART1_TX: PA9 USART1_RX: PA10 //
 
-	__USART2_CLK_ENABLE(); // enable USART2 clock
+	//__USART2_CLK_ENABLE(); // enable USART2 RCC clock --> __HAL_RCC_USART2_CLK_ENABLE();
+	__HAL_RCC_USART2_CLK_ENABLE();
 	//__HAL_RCC_GPIOA_CLK_ENABLE(); // don't need to do this for this program since it is done in MX_PGIO_init();
 
 	// declare local typedef for GPIO
@@ -26,26 +31,34 @@ void uartInit(void)
 	uartGPIO.Mode = GPIO_MODE_AF_PP; // set pin to Alternate Function in Push-Pull Mode
 	uartGPIO.Alternate = GPIO_AF7_USART2; // assign alternate function to port
 	uartGPIO.Speed = GPIO_SPEED_FREQ_HIGH; // high frequency clocking
-	HAL_GPIO_Init(GPIOA, &uartGPIO); // initialise PA2
+	HAL_GPIO_Init(GPIOA, &uartGPIO); // initialise PA2 configuration
 	//RX2
 	uartGPIO.Pin = RX2; // USART2_TX: PA3
 	uartGPIO.Mode = GPIO_MODE_AF_PP; // set pin to Alternate Function in Push-Pull Mode
 	uartGPIO.Alternate = GPIO_AF7_USART2; // assign alternate function to port
 	uartGPIO.Speed = GPIO_SPEED_FREQ_HIGH; // high frequency clocking
-	HAL_GPIO_Init(GPIOA, &uartGPIO); // initialise PA3
+	HAL_GPIO_Init(GPIOA, &uartGPIO); // initialise PA3 configuration
 
-	// Set the USART settings
+	// Set the USART2 settings
 
-	// declare local typedef for USART
-	UART_InitTypeDef uartSet;
+	uart2Set.Instance = USART2;
+	uart2Set.Init.BaudRate = 115200; // set the baud rate
+	uart2Set.Init.HwFlowCtl = UART_HWCONTROL_NONE; // no hardware control
+	uart2Set.Init.Mode = UART_MODE_RX | UART_MODE_TX; // TX or RX mode
+	uart2Set.Init.Parity = UART_PARITY_NONE; // no parity
+	uart2Set.Init.StopBits = UART_STOPBITS_1; // 1 stop bit
+	uart2Set.Init.WordLength = UART_WORDLENGTH_8B;
+	//note for possible bug:  UART_WordLength_8B address cannot be found??
+	//uart2Set.Int.WordLength &= ~(1<<12)|(1<<28);// set the word length to 8 bits - UART_WordLength_8B;
+	//HAL_UART_Init(&uart2Set); // initialise USART2 configuration
+
+	if (HAL_UART_Init(&uart2Set) != HAL_OK)
+	{
+		_Error_Handler(__FILE__, __LINE__);
+	}
 
 
-	//uartSet.BaudRate = 115200; // set the baud rate
-	//uartSet.HwFlowCtl = UART_HWCONTROL_NONE; // no hardware control
-	//uartSet.Mode = UART_MODE_RX | UART_MODE_TX; // TX or RX mode
-	//uartSet.Parity = UART_PARITY_NONE; // no parity
-	//uartSet.StopBits = UART_STOPBITS_1; // 1 stop bit
-	//uartSet.WordLength = UART_WordLength_8b;
+
 
 }
 
@@ -64,6 +77,38 @@ int main(void)
 
 	while (1)
 	{
+		char buffer0[] = "\r testing to see if the terminal works \r\n"; // \r\n";
+		char buffer1[] = "if it works \r\n";
+		char buffer2[] = "lines disappear after 1s \r\n";
+		char buffer3[] = "terminal is cleared \r\n";
+
+		// Terminal commands - START
+
+		char clearTerminal[] = "\033[2J"; // clear terminal screen
+		//char upXTerminal = "\033[XA"; // Move up X lines
+		//char downXTerminal = "\033[XB"; // Move down X lines
+		//char rightXTerminal = "\033[XC"; // Move right X lines
+		//char leftXTerminal=  "\033[XD"; // Move left X lines
+
+		// Terminal commands - END
+
+		// see how to use printf instead of HAL_UART_TRANSMIT
+		// redirect stdout ?? somethin to do with _write ....??
+
+		//HAL_UART_Receive(&s_UARTHandle, buffer, sizeof(buffer), HAL_MAX_DELAY);
+		HAL_UART_Transmit(&uart2Set, buffer0, strlen(buffer0), HAL_MAX_DELAY);
+		HAL_Delay(1000); // in ms
+		HAL_UART_Transmit(&uart2Set, buffer1, strlen(buffer1), HAL_MAX_DELAY);
+		HAL_Delay(1000); // in ms
+		HAL_UART_Transmit(&uart2Set, buffer2, strlen(buffer2), HAL_MAX_DELAY);
+		HAL_Delay(1000); // in ms
+		HAL_Delay(1000); // in ms
+		HAL_UART_Transmit(&uart2Set, buffer2, strlen(buffer3), HAL_MAX_DELAY);
+		HAL_Delay(1000); // in ms
+		HAL_UART_Transmit(&uart2Set, clearTerminal, strlen(clearTerminal), HAL_MAX_DELAY);
+
+
+
 
 	}
 
