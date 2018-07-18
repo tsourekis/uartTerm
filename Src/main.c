@@ -12,6 +12,63 @@
 // declare global handle for USART
 UART_HandleTypeDef uart2Set;
 
+// Implementing printf in STM32 - START
+
+#include "stdio.h" // include std I/O for C
+
+struct __FILE
+{
+	int dummyVariable;
+};
+
+FILE __stdout;
+FILE __stdin;
+
+int fputc(int c, FILE * stream)
+{
+//	uartWrite(c);
+	return c;
+}
+
+// see https://www.csie.ntu.edu.tw/~r92094/c++/VT100.html for terminal commands
+const char clearTerminal[] = "\033[2J"; // clear terminal screen
+const char cursorHome[] = "\033[H"; // set cursor back home
+
+void _write(int file, char *data, int len)
+{
+	HAL_UART_Transmit(&uart2Set, (uint8_t*)data, len, HAL_MAX_DELAY);
+}
+
+// Implementing printf in STM32 - END
+
+int main(void)
+{
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
+	/* Configure the system clock */
+	SystemClock_Config();
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	/* Initiliaze UART settings */
+	uartInit();
+
+	// see https://www.csie.ntu.edu.tw/~r92094/c++/VT100.html for terminal commands
+
+	int k=0;
+
+	// cursorhome            Move cursor to upper left corner       \033[H
+
+	while (1)
+	{
+		printf("%s\033[H", clearTerminal);
+		puts("ha ha");
+		printf("Hello World %d\r\n", k++);
+		HAL_Delay(1000);
+	}
+
+}
+
+// USER DEFINED FUNCTIONS- START
 
 void uartInit(void)
 {
@@ -57,99 +114,7 @@ void uartInit(void)
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
-
-
-
 }
-
-
-
-int main(void)
-{
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
-	/* Configure the system clock */
-	SystemClock_Config();
-	/* Initialize all configured peripherals */
-	MX_GPIO_Init();
-	/* Initiliaze UART settings */
-	uartInit();
-
-	while (1)
-	{
-		char buffer0[] = "\r testing to see if the terminal works \r\n"; // \r\n";
-		char buffer1[] = "if it works \r\n";
-		char buffer2[] = "lines disappear after 1s \r\n";
-		char buffer3[] = "terminal is cleared \r\n";
-
-		// Terminal commands - START
-
-		char clearTerminal[] = "\033[2J"; // clear terminal screen
-		//char upXTerminal = "\033[XA"; // Move up X lines
-		//char downXTerminal = "\033[XB"; // Move down X lines
-		//char rightXTerminal = "\033[XC"; // Move right X lines
-		//char leftXTerminal=  "\033[XD"; // Move left X lines
-
-		// Terminal commands - END
-
-		// see how to use printf instead of HAL_UART_TRANSMIT
-		// redirect stdout ?? somethin to do with _write ....??
-
-		//HAL_UART_Receive(&s_UARTHandle, buffer, sizeof(buffer), HAL_MAX_DELAY);
-		HAL_UART_Transmit(&uart2Set, buffer0, strlen(buffer0), HAL_MAX_DELAY);
-		HAL_Delay(1000); // in ms
-		HAL_UART_Transmit(&uart2Set, buffer1, strlen(buffer1), HAL_MAX_DELAY);
-		HAL_Delay(1000); // in ms
-		HAL_UART_Transmit(&uart2Set, buffer2, strlen(buffer2), HAL_MAX_DELAY);
-		HAL_Delay(1000); // in ms
-		HAL_Delay(1000); // in ms
-		HAL_UART_Transmit(&uart2Set, buffer2, strlen(buffer3), HAL_MAX_DELAY);
-		HAL_Delay(1000); // in ms
-		HAL_UART_Transmit(&uart2Set, clearTerminal, strlen(clearTerminal), HAL_MAX_DELAY);
-
-
-
-
-	}
-
-}
-
-// USER DEFINED FUNCTIONS- START
-
-/*
- *
-// old init for reference
-
-void gpioInit(void)
-{
-	// declare local typedef
-	GPIO_InitTypeDef gpio;
-	// alternatively use 	GPIO_InitTypeDef GPIO_InitStruct;
-	 *
-	 */
-	/* Alternate definition below
-	// setup pin PA5 (LED2) as a digital output in push-pull
-	gpio.Pin = GPIO_PIN_5; // configure GPIO pin 5
-	gpio.Mode = GPIO_MODE_OUTPUT_PP; // output is push-pull
-	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM; // set medium frequency clocking
-	HAL_GPIO_Init(GPIOA, &gpio); //
-	*/
-/*
-	// setup pin PA5 (LED2) as a digital output in push-pull
-	gpio.Pin = LED2; // configure GPIO pin 5
-	gpio.Mode = GPIO_MODE_OUTPUT_PP; // output is push-pull
-	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM; // set medium frequency clocking
-	HAL_GPIO_Init(GPIOA, &gpio); // initiliase GPIO PA5 (LED2)
-
-	// setup pin PC13 to accept input with button attached to it
-	gpio.Pin = button1; // configure GPIO pin 13
-	gpio.Mode = GPIO_MODE_INPUT; // set as floating input
-	gpio.Pull = GPIO_PULLDOWN; // pulldown activated on PC13
-	HAL_GPIO_Init(GPIOC, &gpio); // initialise GPIO PC13 (button1)
-
-}
-*/
-
 
 
 // USER DEFINED FUNCTION - END
