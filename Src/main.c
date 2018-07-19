@@ -1,69 +1,43 @@
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f3xx_hal.h"
+#include "stdio.h" // include for printf
 
-// SEE DOCUMENT "UM1786" FOR HAL DRIVERS
-
-// USER DEFINES - START
 #define TX2 GPIO_PIN_2 //PA2
 #define RX2 GPIO_PIN_3 //PA3
-// USER DEFINES - END
 
-// declare global handle for USART
-UART_HandleTypeDef uart2Set;
-
-// Implementing printf in STM32 - START
-
-#include "stdio.h" // include std I/O for C
-
-struct __FILE
-{
-	int dummyVariable;
-};
-
-FILE __stdout;
-FILE __stdin;
-
-int fputc(int c, FILE * stream)
-{
-//	uartWrite(c);
-	return c;
-}
-
-// see https://www.csie.ntu.edu.tw/~r92094/c++/VT100.html for terminal commands
 const char clearTerminal[] = "\033[2J"; // clear terminal screen
 const char cursorHome[] = "\033[H"; // set cursor back home
 
-void _write(int file, char *data, int len)
-{
-	HAL_UART_Transmit(&uart2Set, (uint8_t*)data, len, HAL_MAX_DELAY);
-}
-
-// Implementing printf in STM32 - END
+UART_HandleTypeDef uart2Set;
 
 int main(void)
 {
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
-	/* Configure the system clock */
-	SystemClock_Config();
-	/* Initialize all configured peripherals */
-	MX_GPIO_Init();
-	/* Initiliaze UART settings */
-	uartInit();
+	HAL_Init();	//Reset of all peripherals, Initializes the Flash interface and the Systick
+	SystemClock_Config(); //Configure the system clock
+	MX_GPIO_Init(); // Initialize all configured peripherals
 
-	// see https://www.csie.ntu.edu.tw/~r92094/c++/VT100.html for terminal commands
+	uartInit(); // Initiliaze UART settings
 
-	int k=0;
+	int dummyVar=0;
 
 	// cursorhome            Move cursor to upper left corner       \033[H
 
 	while (1)
 	{
-		printf("%s\033[H", clearTerminal);
-		puts("ha ha");
-		printf("Hello World %d\r\n", k++);
-		HAL_Delay(1000);
+		if (dummyVar < 6)
+		{
+			printf("%s %s", cursorHome,clearTerminal);
+			printf("This is to test the terminal \r\n");
+			printf("Timer is %d \r\n", dummyVar++);
+			HAL_Delay(1000);
+		}
+		else
+		{
+			dummyVar = 0;
+			printf("Timer will reset now \r\n");
+			printf("%s %s", cursorHome,clearTerminal);
+			HAL_Delay(1000);
+		}
 	}
 
 }
@@ -116,6 +90,31 @@ void uartInit(void)
 
 }
 
+
+
+/* Implementing printf in STM32 - START */
+
+
+struct __FILE
+{
+	int dummyVariable;
+};
+
+FILE __stdout;
+FILE __stdin;
+
+int fputc(int c, FILE * stream)
+{
+//	uartWrite(c);
+	return c;
+}
+
+void _write(int file, char *data, int len)
+{
+	HAL_UART_Transmit(&uart2Set, (uint8_t*)data, len, HAL_MAX_DELAY);
+}
+
+/* Implementing printf in STM32 - END */
 
 // USER DEFINED FUNCTION - END
 
