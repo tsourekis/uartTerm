@@ -5,6 +5,18 @@
 #define TX2 GPIO_PIN_2 //PA2
 #define RX2 GPIO_PIN_3 //PA3
 
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_YELLOW  "\x1b[33m"
+#define ANSI_COLOR_BLUE    "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN    "\x1b[36m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
+
+
+
+
 const char clearTerminal[] = "\033[2J"; // clear terminal screen
 const char cursorHome[] = "\033[H"; // set cursor back home
 
@@ -20,7 +32,6 @@ int main(void)
 
 	int dummyVar=0;
 
-	// cursorhome            Move cursor to upper left corner       \033[H
 
 	while (1)
 	{
@@ -91,6 +102,12 @@ void uartInit(void)
 }
 
 
+void USART2_IRQHandler(void)
+{
+
+  HAL_UART_IRQHandler(&uart2Set); //
+
+}
 
 /* Implementing printf in STM32 - START */
 
@@ -232,5 +249,3 @@ void assert_failed(uint8_t* file, uint32_t line)
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
