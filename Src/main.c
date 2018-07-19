@@ -34,20 +34,20 @@ int main(void)
 
 	while (1)
 	{
-		if (dummyVar < 6)
-		{
-			printf("%s %s", cursorHome,clearTerminal);
-			printf(ANSI_COLOR_GREEN "This is to test the terminal" ANSI_COLOR_RESET "\r\n");
-			printf("Timer has been going for " ANSI_COLOR_RED "%d" ANSI_COLOR_RESET " seconds \r\n", dummyVar++);
-			HAL_Delay(1000);
-		}
-		else
-		{
-			dummyVar = 0;
-			printf("Timer will reset now \r\n");
-			printf("%s %s", cursorHome,clearTerminal);
-			HAL_Delay(1000);
-		}
+//		if (dummyVar < 6) // count for 5 seconds
+//		{
+//			printf("%s %s", cursorHome,clearTerminal);
+//			printf(ANSI_COLOR_GREEN "This is to test the terminal" ANSI_COLOR_RESET "\r\n");
+//			printf("Timer has been going for " ANSI_COLOR_RED "%d" ANSI_COLOR_RESET " seconds \r\n", dummyVar++);
+//			HAL_Delay(1000);
+//		}
+//		else
+//		{
+//			dummyVar = 0;
+//			printf("Timer will reset now \r\n");
+//			printf("%s %s", cursorHome,clearTerminal);
+//			HAL_Delay(1000);
+//		}
 	}
 
 }
@@ -82,10 +82,12 @@ void uartInit(void)
 	uart2Set.Instance = USART2;
 	uart2Set.Init.BaudRate = 115200; // set the baud rate
 	uart2Set.Init.HwFlowCtl = UART_HWCONTROL_NONE; // no hardware control
-	uart2Set.Init.Mode = UART_MODE_RX | UART_MODE_TX; // TX or RX mode
+	uart2Set.Init.Mode = UART_MODE_TX_RX; // TX or RX mode
 	uart2Set.Init.Parity = UART_PARITY_NONE; // no parity
 	uart2Set.Init.StopBits = UART_STOPBITS_1; // 1 stop bit
 	uart2Set.Init.WordLength = UART_WORDLENGTH_8B;
+	uart2Set.Init.OverSampling = UART_OVERSAMPLING_16;
+	uart2Set.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
 	//note for possible bug:  UART_WordLength_8B address cannot be found??
 	//uart2Set.Int.WordLength &= ~(1<<12)|(1<<28);// set the word length to 8 bits - UART_WordLength_8B;
 	//HAL_UART_Init(&uart2Set); // initialise USART2 configuration
@@ -95,16 +97,20 @@ void uartInit(void)
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
-	NVIC_EnableIRQ(USART2_IRQn);
+	USART2->CR1 |= USART_CR1_RXNEIE;
 
+	HAL_NVIC_SetPriority(USART2_IRQn, 0, 0); // USART2 interrupt priority
+	NVIC_EnableIRQ(USART2_IRQn); // enable interrupt on USART2
+	printf("USART Interrupt enabled\n");
+
+//	setbuf(stdout, 0);
 }
-
 
 void USART2_IRQHandler(void)
 {
+	uint8_t dataIn = USART2->RDR;
 
-  HAL_UART_IRQHandler(&uart2Set); //
-
+	printf("%c", dataIn);
   //USART_GetITStatus();
 
 }
