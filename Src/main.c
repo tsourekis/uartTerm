@@ -14,13 +14,12 @@
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
 
-
-
-
 const char clearTerminal[] = "\033[2J"; // clear terminal screen
 const char cursorHome[] = "\033[H"; // set cursor back home
 
-UART_HandleTypeDef uart2Set;
+GPIO_InitTypeDef uartGPIO; // declare typedef for setting up GPIOs for UART
+UART_HandleTypeDef uart2Set; // declare typedef for UART settings
+
 
 int main(void)
 {
@@ -38,8 +37,8 @@ int main(void)
 		if (dummyVar < 6)
 		{
 			printf("%s %s", cursorHome,clearTerminal);
-			printf("This is to test the terminal \r\n");
-			printf("Timer is %d \r\n", dummyVar++);
+			printf(ANSI_COLOR_GREEN "This is to test the terminal" ANSI_COLOR_RESET "\r\n");
+			printf("Timer has been going for " ANSI_COLOR_RED "%d" ANSI_COLOR_RESET " seconds \r\n", dummyVar++);
 			HAL_Delay(1000);
 		}
 		else
@@ -62,9 +61,6 @@ void uartInit(void)
 	//__USART2_CLK_ENABLE(); // enable USART2 RCC clock --> __HAL_RCC_USART2_CLK_ENABLE();
 	__HAL_RCC_USART2_CLK_ENABLE();
 	//__HAL_RCC_GPIOA_CLK_ENABLE(); // don't need to do this for this program since it is done in MX_PGIO_init();
-
-	// declare local typedef for GPIO
-	GPIO_InitTypeDef uartGPIO; // declare typedef for setting up GPIOs for UART
 
 	// USART2 Pin Assignment //
 
@@ -99,6 +95,8 @@ void uartInit(void)
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
+	NVIC_EnableIRQ(USART2_IRQn);
+
 }
 
 
@@ -106,6 +104,8 @@ void USART2_IRQHandler(void)
 {
 
   HAL_UART_IRQHandler(&uart2Set); //
+
+  //USART_GetITStatus();
 
 }
 
