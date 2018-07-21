@@ -12,6 +12,7 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 // Serial Terminal Instructions
+#define ENTER 13
 #define CLEAR_TERMINAL "\033[2J"
 #define CURSOR_HOME "\033[H"
 //USART2 Pins

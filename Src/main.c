@@ -6,6 +6,7 @@
 #include "printfRedir.h"
 #include "sysClock.h"
 #include "gpio.h"
+#include "isr.h"
 /* Declarations */
 
 /* Typedef and Handle Declarations*/
@@ -27,6 +28,9 @@ void GPIO_LD2_Init(void);
 void RCC_USART_ENABLE(void);
 void GPIO_USART2_Init(void);
 void USART2_Init(void);
+// ISR Configurations and Functions
+//void ISR_USART_EN(void);
+//void USART2_IRQHandler(void);
 
 
 /* Main function*/
@@ -40,6 +44,7 @@ int main(void)
 
 	GPIO_USART2_Init();
 	USART2_Init();
+	ISR_USART_EN();
 
 	GPIO_LD2_Init();
 
@@ -47,9 +52,12 @@ int main(void)
 
 	while(1)
 	{
-		printf(CURSOR_HOME CLEAR_TERMINAL);
-		printf("Testing Minicom \r\n");
-		HAL_Delay(1000);
+		//printf(CURSOR_HOME CLEAR_TERMINAL);
+		printf("Testing Minicom sdfds\r\n");
+		HAL_GPIO_WritePin(GPIOA, LD2, GPIO_PIN_SET);
+		HAL_Delay(100);
+		HAL_GPIO_WritePin(GPIOA, LD2, GPIO_PIN_RESET);
+		HAL_Delay(100);
 		printf("Works \r\n");
 		HAL_Delay(1000);
 

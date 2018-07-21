@@ -45,6 +45,7 @@ void USART2_Init(void)
 	{
 		_Error_Handler(__FILE__, __LINE__);
 	}
+
 }
 
 
