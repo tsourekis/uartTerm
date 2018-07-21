@@ -32,8 +32,9 @@ void USART2_Init(void);
 //void ISR_USART_EN(void);
 //void USART2_IRQHandler(void);
 
-
 /* Main function*/
+
+
 
 int main(void)
 {
@@ -42,24 +43,27 @@ int main(void)
 	RCC_GPIO_ENABLE();
 	RCC_USART_ENABLE();
 
+	GPIO_LD2_Init();
+	HAL_GPIO_WritePin(GPIOA, LD2, GPIO_PIN_SET);
+
 	GPIO_USART2_Init();
 	USART2_Init();
+	//printf(CURSOR_HOME CLEAR_TERMINAL);
 	ISR_USART_EN();
 
-	GPIO_LD2_Init();
 
-
-
+	//
 	while(1)
 	{
-		//printf(CURSOR_HOME CLEAR_TERMINAL);
-		printf("Testing Minicom sdfds\r\n");
-		HAL_GPIO_WritePin(GPIOA, LD2, GPIO_PIN_SET);
-		HAL_Delay(100);
-		HAL_GPIO_WritePin(GPIOA, LD2, GPIO_PIN_RESET);
-		HAL_Delay(100);
-		printf("Works \r\n");
-		HAL_Delay(1000);
+//		printf(CURSOR_HOME CLEAR_TERMINAL);
+//		printf("Testing Minicom sdfds\r\n");
+//		HAL_GPIO_WritePin(GPIOA, LD2, GPIO_PIN_SET);
+//		HAL_Delay(100);
+//		HAL_GPIO_WritePin(GPIOA, LD2, GPIO_PIN_RESET);
+//		HAL_Delay(100);
+		//printf("Works \r\n");
+		//HAL_GPIO_TogglePin(GPIOA,LD2);
+		//HAL_Delay(1000);
 
 
 	}
