@@ -47,6 +47,11 @@ int main(void)
 
 	while(1)
 	{
+		printf(CURSOR_HOME CLEAR_TERMINAL);
+		printf("Testing Minicom \r\n");
+		HAL_Delay(1000);
+		printf("Works \r\n");
+		HAL_Delay(1000);
 
 
 	}
