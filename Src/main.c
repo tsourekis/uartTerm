@@ -52,7 +52,8 @@ int main(void)
 	ISR_USART2_Init();
 
 
-	printf("Type something\r\n");
+	printf("Does this program work (y/n)\r\n");
+	printf(">>");
 
 	//
 	while(1)

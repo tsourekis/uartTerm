@@ -16,7 +16,8 @@ void ISR_USART2_Init(void)
 
 }
 
-volatile char str_dataRX[4];
+#define DATA_LEN 4
+volatile char str_dataRX[DATA_LEN];
 static int bufferRX_idx = 0;
 
 
@@ -24,17 +25,19 @@ void USART2_IRQHandler(void)
 {
 	uint8_t dataRX = USART2->RDR;
 
-	if(dataRX !='\n' && bufferRX_idx<4)
+	//printf(">>");
+	if(dataRX !='\n' && bufferRX_idx<DATA_LEN)
 	{
 		str_dataRX[bufferRX_idx] = dataRX;
 		HAL_GPIO_TogglePin(GPIOA, LD2);
-		printf(">>%c\r\n", str_dataRX[bufferRX_idx]);
+		printf("%c", str_dataRX[bufferRX_idx]);
+		fflush(stdout);
 		bufferRX_idx++;
 	}
-	else
+	else if( (bufferRX_idx >DATA_LEN -1) || str_dataRX[bufferRX_idx] == 13)
 	{
 		bufferRX_idx = 0;
-		//printf(">>%s\r\n", str_dataRX);
+		printf("\r\n");
 
 	}
 
