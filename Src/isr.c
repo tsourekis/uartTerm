@@ -16,15 +16,15 @@ void ISR_USART2_Init(void)
 
 }
 
-char str_dataRX[4];
+volatile char str_dataRX[4];
+static int bufferRX_idx = 0;
 
 
-void USART2_IRQHandler()
+void USART2_IRQHandler(void)
 {
 	uint8_t dataRX = USART2->RDR;
-	static int bufferRX_idx = 0;
 
-	if(dataRX != '\n' || bufferRX_idx<4 || dataRX !=13)
+	if(dataRX !='\n' && bufferRX_idx<4)
 	{
 		str_dataRX[bufferRX_idx] = dataRX;
 		HAL_GPIO_TogglePin(GPIOA, LD2);

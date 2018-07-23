@@ -34,7 +34,6 @@ void USART2_Init(void);
 
 /* Main function*/
 
-char* buff_TX="Hello \r\n";
 
 
 int main(void)
@@ -51,6 +50,7 @@ int main(void)
 	USART2_Init();
 
 	ISR_USART2_Init();
+
 
 	printf("Type something\r\n");
 
