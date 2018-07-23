@@ -7,24 +7,37 @@ extern UART_HandleTypeDef huart2;
 
 
 // Note: Interrupts don't come enabled!!
-void ISR_USART_EN(void)
+void ISR_USART2_Init(void)
 {
-	//USART2 ->CR1 |= USART_CR1_RXNEIE; // Receiver Interrupt Enable bit
-	HAL_NVIC_SetPriority(USART2_IRQn, 0, 0); // set the USART2 interrupt priority
+
+	__HAL_UART_ENABLE_IT(&huart2,UART_IT_RXNE); // enable interrupt on RX
 	NVIC_EnableIRQ(USART2_IRQn); // enable the interrupts on USART2
-	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE); // RX buffer not empty FLAG
-	//__HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE); // TX complete FLAG
+	HAL_NVIC_SetPriority(USART2_IRQn, 0, 0); // set the USART2 interrupt priority (lower the number; the higher the priority)
+
 }
-void USART2_IRQHandler(void)
+
+char str_dataRX[4];
+
+
+void USART2_IRQHandler()
 {
-	uint8_t dataRX = USART2->RDR; // define a variable to store the received data for USART2
-	//HAL_UART_Receive(&huart2, dataRX, sizeof(dataRX), HAL_MAX_DELAY);
+	uint8_t dataRX = USART2->RDR;
+	static int bufferRX_idx = 0;
 
-	printf("test\r\n");
-	printf(">>%c", dataRX); // prints the received characters
-	//__HAL_UART_ENABLE_IT(&huart2, UART_IT_TXE); // TX complete FLAG
+	if(dataRX != '\n' || bufferRX_idx<4 || dataRX !=13)
+	{
+		str_dataRX[bufferRX_idx] = dataRX;
+		HAL_GPIO_TogglePin(GPIOA, LD2);
+		printf(">>%c\r\n", str_dataRX[bufferRX_idx]);
+		bufferRX_idx++;
+	}
+	else
+	{
+		bufferRX_idx = 0;
+		//printf(">>%s\r\n", str_dataRX);
 
-	HAL_GPIO_TogglePin(GPIOA,LD2);
+	}
+
 
 }
 

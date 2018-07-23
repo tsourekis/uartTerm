@@ -34,6 +34,7 @@ void USART2_Init(void);
 
 /* Main function*/
 
+char* buff_TX="Hello \r\n";
 
 
 int main(void)
@@ -48,24 +49,15 @@ int main(void)
 
 	GPIO_USART2_Init();
 	USART2_Init();
-	//printf(CURSOR_HOME CLEAR_TERMINAL);
-	ISR_USART_EN();
 
+	ISR_USART2_Init();
+
+	printf("Type something\r\n");
 
 	//
 	while(1)
 	{
-//		printf(CURSOR_HOME CLEAR_TERMINAL);
-//		printf("Testing Minicom sdfds\r\n");
-//		HAL_GPIO_WritePin(GPIOA, LD2, GPIO_PIN_SET);
-//		HAL_Delay(100);
-//		HAL_GPIO_WritePin(GPIOA, LD2, GPIO_PIN_RESET);
-//		HAL_Delay(100);
-		//printf("Works \r\n");
-		//HAL_GPIO_TogglePin(GPIOA,LD2);
-		//HAL_Delay(1000);
-
-
+		//HAL_UART_Transmit_IT(&huart2, buff_TX,8); // changed TX to interrupt mode
 	}
 
 

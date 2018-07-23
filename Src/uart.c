@@ -40,12 +40,14 @@ void USART2_Init(void)
 	huart2.Init.WordLength = UART_WORDLENGTH_8B; // 8-bit word length
 	huart2.Init.OverSampling = UART_OVERSAMPLING_16; // Oversampling by 16U
 	huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE; // disable one-bit sampling
+	HAL_UART_Init(&huart2); // enable UART2
 
-	if (HAL_UART_Init(&huart2) != HAL_OK)
-	{
-		_Error_Handler(__FILE__, __LINE__);
-	}
+//	if (HAL_UART_Init(&huart2) != HAL_OK)
+//	{
+//		_Error_Handler(__FILE__, __LINE__);
+//	}
 
 }
+
 
 
