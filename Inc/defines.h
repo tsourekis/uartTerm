@@ -15,6 +15,7 @@
 #define ENTER 13
 #define CLEAR_TERMINAL "\033[2J"
 #define CURSOR_HOME "\033[H"
+#define RX_DATA_LEN 4
 //USART2 Pins
 #define TX2 GPIO_PIN_2 //PA2
 #define RX2 GPIO_PIN_3 //PA3

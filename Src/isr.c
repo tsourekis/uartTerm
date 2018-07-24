@@ -1,6 +1,7 @@
 #include "main.h"
 #include "stm32f3xx_hal.h"
 #include "defines.h"
+#include "stm32f3xx_it.h"
 #include "isr.h"
 
 extern UART_HandleTypeDef huart2;
@@ -16,29 +17,33 @@ void ISR_USART2_Init(void)
 
 }
 
-#define DATA_LEN 4
-volatile char str_dataRX[DATA_LEN];
-static int bufferRX_idx = 0;
-
-
 void USART2_IRQHandler(void)
 {
+	char str_dataRX[RX_DATA_LEN];
+	int bufferRX_idx = 0;
 	uint8_t dataRX = USART2->RDR;
 
-	//printf(">>");
-	if(dataRX !='\n' && bufferRX_idx<DATA_LEN)
+	// Circular Buffer - sort of?? - START
+	if(dataRX !='\n' && (bufferRX_idx<RX_DATA_LEN) )
 	{
 		str_dataRX[bufferRX_idx] = dataRX;
-		HAL_GPIO_TogglePin(GPIOA, LD2);
 		printf("%c", str_dataRX[bufferRX_idx]);
 		fflush(stdout);
 		bufferRX_idx++;
 	}
-	else if( (bufferRX_idx >DATA_LEN -1) || str_dataRX[bufferRX_idx] == 13)
+	else if( bufferRX_idx > (RX_DATA_LEN -1) )
+	{
+		bufferRX_idx = 0;
+		//str_dataRX[bufferRX_idx] = dataRX;
+	}
+	// Circular Buffer - sort of?? - END
+
+	// Escape sequence - ENTER KEY PRESSED
+	if( dataRX == ENTER )
 	{
 		bufferRX_idx = 0;
 		printf("\r\n");
-
+		HAL_GPIO_TogglePin(GPIOA, LD2);
 	}
 
 

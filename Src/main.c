@@ -33,7 +33,9 @@ void USART2_Init(void);
 //void USART2_IRQHandler(void);
 
 /* Main function*/
+// UART RX Variables - START
 
+// UART TX Variables - END
 
 
 int main(void)
@@ -49,16 +51,14 @@ int main(void)
 	GPIO_USART2_Init();
 	USART2_Init();
 
+	printf(CURSOR_HOME CLEAR_TERMINAL);
+	printf("Type something below: \r\n");
+
 	ISR_USART2_Init();
 
-
-	printf("Does this program work (y/n)\r\n");
-	printf(">>");
-
-	//
 	while(1)
 	{
-		//HAL_UART_Transmit_IT(&huart2, buff_TX,8); // changed TX to interrupt mode
+
 	}
 
 
