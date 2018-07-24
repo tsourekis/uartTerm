@@ -12,10 +12,11 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 // Serial Terminal Instructions
+#define NEWLINE "\r\n"
 #define ENTER 13
 #define CLEAR_TERMINAL "\033[2J"
 #define CURSOR_HOME "\033[H"
-#define RX_DATA_LEN 4
+#define RX_DATA_LEN 64
 //USART2 Pins
 #define TX2 GPIO_PIN_2 //PA2
 #define RX2 GPIO_PIN_3 //PA3

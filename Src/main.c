@@ -7,7 +7,8 @@
 #include "sysClock.h"
 #include "gpio.h"
 #include "isr.h"
-/* Declarations */
+#include "terminal.h"
+/* Data Type Declarations */
 
 /* Typedef and Handle Declarations*/
 GPIO_InitTypeDef GPIO;
@@ -15,7 +16,7 @@ GPIO_InitTypeDef GPIO;
 GPIO_InitTypeDef uart2;
 UART_HandleTypeDef huart2;
 
-/* User function prototype calls */
+/* User Function Prototype Calls */
 
 // Startup configuration
 void _write(int file, char *data, int len);
@@ -29,13 +30,13 @@ void RCC_USART_ENABLE(void);
 void GPIO_USART2_Init(void);
 void USART2_Init(void);
 // ISR Configurations and Functions
-//void ISR_USART_EN(void);
-//void USART2_IRQHandler(void);
-
+void ISR_USART_EN(void);
+void USART2_IRQHandler(void);
+// Terminal Configuration
+void terminalStartupScreen(void);
+void terminalMenuList(void);
 /* Main function*/
-// UART RX Variables - START
 
-// UART TX Variables - END
 
 
 int main(void)
@@ -51,15 +52,12 @@ int main(void)
 	GPIO_USART2_Init();
 	USART2_Init();
 
-	printf(CURSOR_HOME CLEAR_TERMINAL);
-	printf("Type something below: \r\n");
-
 	ISR_USART2_Init();
 
-	while(1)
-	{
+	terminalStartupScreen();
+	terminalMenuList();
 
-	}
+	while(1);
 
 
 	return 0;

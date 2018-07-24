@@ -17,7 +17,7 @@ void ISR_USART2_Init(void)
 
 }
 
-void USART2_IRQHandler(void)
+void USART2_IRQHandler()
 {
 	char str_dataRX[RX_DATA_LEN];
 	int bufferRX_idx = 0;
@@ -41,10 +41,8 @@ void USART2_IRQHandler(void)
 	if( dataRX == ENTER )
 	{
 		bufferRX_idx = 0;
-		printf("\r\n");
-		HAL_GPIO_TogglePin(GPIOA, LD2);
+		printf(NEWLINE);
 	}
-
 
 }
 
