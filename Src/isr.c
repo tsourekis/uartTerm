@@ -34,7 +34,6 @@ void USART2_IRQHandler(void)
 	else if( bufferRX_idx > (RX_DATA_LEN -1) )
 	{
 		bufferRX_idx = 0;
-		//str_dataRX[bufferRX_idx] = dataRX;
 	}
 	// Circular Buffer - sort of?? - END
 
