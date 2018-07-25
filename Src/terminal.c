@@ -29,20 +29,4 @@ void terminalMenuList(void)
 	printf("----------------------------------------------------------------\r\n");
 }
 
-const char help1[] = "h\r\n";
-const char help2[] = "help\r\n";
 
-//void terminalCommands()
-//{
-//	uint8_t help;
-//	help = strcmp(help2,str_dataRX);
-//
-//	if(help == 1)
-//	{
-//		printf("YOU ASKED FOR HELP\r\n");
-//	}
-//	else
-//	{
-//		printf("%c\r\n", str_dataRX);
-//	}
-//}

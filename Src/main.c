@@ -67,7 +67,6 @@ int main(void)
 	{
 
 		USART2_putc();
-		//terminalCommands();
 
 	}
 

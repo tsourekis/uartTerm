@@ -1,6 +1,7 @@
 #include "main.h"
 #include "stm32f3xx_hal.h"
 #include "defines.h"
+#include "string.h"
 #include "isr.h"
 #include "uart.h"
 
@@ -55,6 +56,8 @@ void USART2_Init(void)
 
 }
 
+const char help[] = "help";
+const char something[] = "something";
 
 void USART2_putc()
 {
@@ -68,16 +71,39 @@ void USART2_putc()
 			fflush(stdout);
 			bufferRX_idx++;
 			bufferRX_idx %= RX_DATA_LEN;
+
 		}
 		if( dataRX == ENTER )
 		{
+			// this works, now write the len as a macro or a function
+			size_t len1 = strlen(help);
+			size_t len2 = strlen(something);
+			if( strncmp(str_dataRX,help, len1 ) == 0 ) // displays incorrectly error after ??
+			{
+				printf(NEWLINE);
+				printf(NEWLINE);
+				printf(">>%s\r\n",str_dataRX);
+			}
+			if( strncmp(str_dataRX,something, len2 ) == 0 )
+			{
+				printf(NEWLINE);
+				printf(NEWLINE);
+				printf(">>%s\r\n",str_dataRX);
+			}
+			else
+			{
+				printf(">>ERROR\r\n");
+			}
+			//
+
 			bufferRX_idx = 0;
+
 			printf(NEWLINE);
+
 		}
+
 	}
+
 }
-
-
-
 
 
