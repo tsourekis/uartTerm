@@ -3,6 +3,11 @@
 
 /* Defines */
 
+// Logic definitions
+#define TRUE 1
+#define FALSE 0
+#define HIGH 1
+#define LOW 0
 // ANSI Color Schemes
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"

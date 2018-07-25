@@ -9,7 +9,6 @@
 #include "isr.h"
 #include "terminal.h"
 /* Data Type Declarations */
-
 /* Typedef and Handle Declarations*/
 GPIO_InitTypeDef GPIO;
 
@@ -32,10 +31,18 @@ void USART2_Init(void);
 // ISR Configurations and Functions
 void ISR_USART_EN(void);
 void USART2_IRQHandler(void);
+void USART2_putc(void);
 // Terminal Configuration
 void terminalStartupScreen(void);
 void terminalMenuList(void);
 /* Main function*/
+
+
+
+
+
+
+
 
 
 
@@ -57,7 +64,12 @@ int main(void)
 	terminalStartupScreen();
 	terminalMenuList();
 
-	while(1);
+
+
+	while(1)
+	{
+		USART2_putc();
+	}
 
 
 	return 0;

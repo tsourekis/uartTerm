@@ -3,6 +3,7 @@
 #include "defines.h"
 #include "stdio.h"
 #include "isr.h"
+#include "uart.h"
 #include "terminal.h"
 
 void terminalStartupScreen(void)
@@ -14,17 +15,25 @@ void terminalStartupScreen(void)
 	printf(NEWLINE);
 }
 
-extern char str_dataRX;
 extern uint8_t dataRX;
+extern uint8_t dataFlag;
+char str_dataRX[RX_DATA_LEN];
+int bufferRX_idx = 0;
+
 
 void terminalMenuList(void)
 {
 	printf(NEWLINE);
 	printf("Type 'h' or 'help' to see the available commands and press ENTER\r\n");
 	printf("----------------------------------------------------------------\r\n");
-//	if( (str_dataRX == 'h' || str_dataRX == 'help') && dataRX == ENTER)
+//	for(int idx = 0; idx <= RX_DATA_LEN; idx++)
 //	{
-//		printf("help menu\r\n");
+//
+//		if( (str_dataRX == "h" ) )
+//		{
+//			printf("this help menu\r\n");
+//		}
+//
 //	}
 }
 

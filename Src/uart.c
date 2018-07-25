@@ -1,10 +1,16 @@
 #include "main.h"
 #include "stm32f3xx_hal.h"
 #include "defines.h"
+#include "isr.h"
 #include "uart.h"
 
 extern GPIO_InitTypeDef uart2;
 extern UART_HandleTypeDef huart2;
+
+extern uint8_t dataRX;
+extern uint8_t dataFlag;
+char str_dataRX[RX_DATA_LEN];
+int bufferRX_idx = 0;
 
 void RCC_USART_ENABLE(void)
 {
@@ -48,6 +54,41 @@ void USART2_Init(void)
 //	}
 
 }
+
+
+void USART2_putc()
+{
+	if(dataFlag == TRUE)
+	{
+		dataFlag = FALSE;
+		// Circular Buffer - START
+		if(dataRX !='\n' && (bufferRX_idx<RX_DATA_LEN) )
+		{
+			str_dataRX[bufferRX_idx] = dataRX;
+			printf("%c", str_dataRX[bufferRX_idx]);
+			fflush(stdout);
+			bufferRX_idx++;
+			bufferRX_idx %= RX_DATA_LEN;
+		}
+
+		/* modulus operation replaces code below
+
+		else if( bufferRX_idx > (RX_DATA_LEN -1) )
+		{
+				bufferRX_idx = 0;
+		}
+		 */
+		// Circular Buffer - END
+
+		// Escape sequence - ENTER KEY PRESSED
+		if( dataRX == ENTER )
+		{
+			bufferRX_idx = 0;
+			printf(NEWLINE);
+		}
+	}
+}
+
 
 
 

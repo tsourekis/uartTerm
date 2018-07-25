@@ -17,32 +17,14 @@ void ISR_USART2_Init(void)
 
 }
 
-void USART2_IRQHandler()
+uint8_t dataRX;
+uint8_t dataFlag;
+
+void USART2_IRQHandler() // we are going to put very little in the ISR and use the RX data in another function.
 {
-	char str_dataRX[RX_DATA_LEN];
-	int bufferRX_idx = 0;
-	uint8_t dataRX = USART2->RDR;
 
-	// Circular Buffer - sort of?? - START
-	if(dataRX !='\n' && (bufferRX_idx<RX_DATA_LEN) )
-	{
-		str_dataRX[bufferRX_idx] = dataRX;
-		printf("%c", str_dataRX[bufferRX_idx]);
-		fflush(stdout);
-		bufferRX_idx++;
-	}
-	else if( bufferRX_idx > (RX_DATA_LEN -1) )
-	{
-		bufferRX_idx = 0;
-	}
-	// Circular Buffer - sort of?? - END
-
-	// Escape sequence - ENTER KEY PRESSED
-	if( dataRX == ENTER )
-	{
-		bufferRX_idx = 0;
-		printf(NEWLINE);
-	}
+	dataFlag = TRUE;
+	dataRX = USART2->RDR;
 
 }
 
