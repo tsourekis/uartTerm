@@ -2,6 +2,7 @@
 #include "stm32f3xx_hal.h"
 #include "defines.h"
 #include "stdio.h"
+#include "string.h"
 #include "isr.h"
 #include "uart.h"
 #include "terminal.h"
@@ -15,25 +16,33 @@ void terminalStartupScreen(void)
 	printf(NEWLINE);
 }
 
+
 extern uint8_t dataRX;
 extern uint8_t dataFlag;
-char str_dataRX[RX_DATA_LEN];
-int bufferRX_idx = 0;
-
+extern char str_dataRX;
+extern int bufferRX_idx;
 
 void terminalMenuList(void)
 {
 	printf(NEWLINE);
 	printf("Type 'h' or 'help' to see the available commands and press ENTER\r\n");
 	printf("----------------------------------------------------------------\r\n");
-//	for(int idx = 0; idx <= RX_DATA_LEN; idx++)
-//	{
-//
-//		if( (str_dataRX == "h" ) )
-//		{
-//			printf("this help menu\r\n");
-//		}
-//
-//	}
 }
 
+const char help1[] = "h\r\n";
+const char help2[] = "help\r\n";
+
+//void terminalCommands()
+//{
+//	uint8_t help;
+//	help = strcmp(help2,str_dataRX);
+//
+//	if(help == 1)
+//	{
+//		printf("YOU ASKED FOR HELP\r\n");
+//	}
+//	else
+//	{
+//		printf("%c\r\n", str_dataRX);
+//	}
+//}

@@ -35,16 +35,13 @@ void USART2_putc(void);
 // Terminal Configuration
 void terminalStartupScreen(void);
 void terminalMenuList(void);
+void terminalCommands(void);
 /* Main function*/
 
 
-
-
-
-
-
-
-
+extern uint8_t dataRX;
+extern char str_dataRX;
+extern uint8_t dataFlag;
 
 int main(void)
 {
@@ -68,7 +65,10 @@ int main(void)
 
 	while(1)
 	{
+
 		USART2_putc();
+		//terminalCommands();
+
 	}
 
 

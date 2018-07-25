@@ -61,7 +61,6 @@ void USART2_putc()
 	if(dataFlag == TRUE)
 	{
 		dataFlag = FALSE;
-		// Circular Buffer - START
 		if(dataRX !='\n' && (bufferRX_idx<RX_DATA_LEN) )
 		{
 			str_dataRX[bufferRX_idx] = dataRX;
@@ -70,17 +69,6 @@ void USART2_putc()
 			bufferRX_idx++;
 			bufferRX_idx %= RX_DATA_LEN;
 		}
-
-		/* modulus operation replaces code below
-
-		else if( bufferRX_idx > (RX_DATA_LEN -1) )
-		{
-				bufferRX_idx = 0;
-		}
-		 */
-		// Circular Buffer - END
-
-		// Escape sequence - ENTER KEY PRESSED
 		if( dataRX == ENTER )
 		{
 			bufferRX_idx = 0;
@@ -88,6 +76,7 @@ void USART2_putc()
 		}
 	}
 }
+
 
 
 

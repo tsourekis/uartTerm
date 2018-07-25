@@ -3,7 +3,7 @@
 
 void terminalStartupScreen(void);
 void terminalMenuList(void);
-
+void terminalCommands(void);
 
 
 #endif /* TERMINAL_H_ */
