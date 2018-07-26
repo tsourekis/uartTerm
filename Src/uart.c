@@ -68,20 +68,18 @@ void USART2_putc()
 			printf("%c", str_dataRX[bufferRX_idx]);
 			fflush(stdout);
 
-			// ADDED
-			if( str_dataRX[bufferRX_idx] == ENTER  )
-			{
-				bufferRX_idx = 0;
-				printf(NEWLINE);
-			}
-			//
 			bufferRX_idx++;
 			bufferRX_idx %= RX_DATA_LEN;
-
+			//
+			if( str_dataRX[(bufferRX_idx - 1)] == ENTER  )
+			{
+				printf(NEWLINE);
+				printf(">>%s\r\n", str_dataRX);
+				bufferRX_idx = 0;
+				memset(str_dataRX, 0, sizeof(str_dataRX)); // clear char array in memory
+			}
 		}
-
 	}
-
 
 }
 
