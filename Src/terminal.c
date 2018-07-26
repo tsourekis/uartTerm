@@ -7,6 +7,17 @@
 #include "uart.h"
 #include "terminal.h"
 
+
+
+
+int len(char *input)
+{
+	size_t len = strlen(input);
+
+	return len;
+}
+
+
 void terminalStartupScreen(void)
 {
 	printf(CURSOR_HOME CLEAR_TERMINAL);
@@ -28,5 +39,6 @@ void terminalMenuList(void)
 	printf("Type 'h' or 'help' to see the available commands and press ENTER\r\n");
 	printf("----------------------------------------------------------------\r\n");
 }
+
 
 

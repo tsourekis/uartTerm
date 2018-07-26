@@ -56,54 +56,34 @@ void USART2_Init(void)
 
 }
 
-const char help[] = "help";
-const char something[] = "something";
 
 void USART2_putc()
 {
 	if(dataFlag == TRUE)
 	{
 		dataFlag = FALSE;
-		if(dataRX !='\n' && (bufferRX_idx<RX_DATA_LEN) )
+		if( dataRX !='\n' && (bufferRX_idx < RX_DATA_LEN) )
 		{
 			str_dataRX[bufferRX_idx] = dataRX;
 			printf("%c", str_dataRX[bufferRX_idx]);
 			fflush(stdout);
-			bufferRX_idx++;
-			bufferRX_idx %= RX_DATA_LEN;
 
-		}
-		if( dataRX == ENTER )
-		{
-			// this works, now write the len as a macro or a function
-			size_t len1 = strlen(help);
-			size_t len2 = strlen(something);
-			if( strncmp(str_dataRX,help, len1 ) == 0 ) // displays incorrectly error after ??
+			// ADDED
+			if( str_dataRX[bufferRX_idx] == ENTER  )
 			{
+				bufferRX_idx = 0;
 				printf(NEWLINE);
-				printf(NEWLINE);
-				printf(">>%s\r\n",str_dataRX);
-			}
-			if( strncmp(str_dataRX,something, len2 ) == 0 )
-			{
-				printf(NEWLINE);
-				printf(NEWLINE);
-				printf(">>%s\r\n",str_dataRX);
-			}
-			else
-			{
-				printf(">>ERROR\r\n");
 			}
 			//
-
-			bufferRX_idx = 0;
-
-			printf(NEWLINE);
+			bufferRX_idx++;
+			bufferRX_idx %= RX_DATA_LEN;
 
 		}
 
 	}
 
+
 }
+
 
 

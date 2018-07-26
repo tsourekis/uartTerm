@@ -5,5 +5,6 @@ void terminalStartupScreen(void);
 void terminalMenuList(void);
 void terminalCommands(void);
 
+int len(char *input);
 
 #endif /* TERMINAL_H_ */

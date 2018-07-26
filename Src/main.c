@@ -36,12 +36,9 @@ void USART2_putc(void);
 void terminalStartupScreen(void);
 void terminalMenuList(void);
 void terminalCommands(void);
+int len(char *input);
 /* Main function*/
 
-
-extern uint8_t dataRX;
-extern char str_dataRX;
-extern uint8_t dataFlag;
 
 int main(void)
 {
